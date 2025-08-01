@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>URL Shortener</title>
+
+  <!-- Link to external CSS file for styling -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- Page heading -->
+  <h1>URL Shortener</h1>
+
+  <!-- URL shortener form -->
+  <form id="urlForm">
+    <!-- Input field for the original long URL -->
+    <input type="text" id="longUrl" placeholder="Enter long URL" required />
+    
+    <!-- Submit button to trigger shortening -->
+    <button type="submit">Shorten</button>
+  </form>
+
+  <!-- Area where the result (shortened URL or error) will be displayed -->
+  <p id="result"></p>
+
+  <!-- JavaScript logic for calling AWS Lambda API -->
+  <script>
+    // Lambda function URL that handles the POST request and returns the short URL
+    const lambdaUrl = "https://rv7gpmq5jzsrmcsequctla5lhu0hmysk.lambda-url.us-west-2.on.aws/";
+
+    // Attach a submit event listener to the form
+    document.getElementById('urlForm').addEventListener('submit', async (e) => {
+      e.preventDefault(); // Prevent page from refreshing
+
+      // Get the value of the URL entered by the user
+      const longUrl = document.getElementById('longUrl').value;
+
+      try {
+        // Send the URL to the Lambda function using a POST request
+        const response = await fetch(lambdaUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ long_url: longUrl }) // Send URL in JSON format
+        });
+
+        // Throw an error if response is not OK (e.g., 4xx or 5xx status)
+        if (!response.ok) throw new Error("Request failed");
+
+        // Parse JSON response
+        const data = await response.json();
+
+        // Display the short URL as a clickable link
+        document.getElementById('result').innerHTML =
+          `Short URL: <a href="${data.short_url}" target="_blank">${data.short_url}</a>`;
+      } catch (err) {
+        // If an error occurs, show error message and log it to console
+        document.getElementById('result').textContent = 'Error shortening URL.';
+        console.error(err);
+      }
+    });
+  </script>
+
+</body>
+</html>
