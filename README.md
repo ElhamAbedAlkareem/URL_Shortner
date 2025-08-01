@@ -35,7 +35,7 @@ This project is a lightweight, serverless URL shortener built with **AWS Lambda*
 ├── style.css # Optional CSS styling
 ├── background.jpg # Optional
 ├── Deployment Guide # (Manual via Console)
-├── README.md # You're reading this file
+└── README.md # You're reading this file
 
 
 ---
