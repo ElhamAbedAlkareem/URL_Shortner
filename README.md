@@ -71,5 +71,7 @@ Response:
   "short_url": "https://<lambda-function-url>/<short_id>"
 }
 
+### 🔹 GET Request
+```json
 GET https://<lambda-function-url>/<short_id>
 302 Redirect → Original URL
